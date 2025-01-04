@@ -20,18 +20,38 @@ class ForumService {
     return _handleResponse(response);
   }
 
-  Future<Map<String, dynamic>> getComments(String postId) async {
-    final response =
-        await http.get(Uri.parse('$baseUrl/posts/$postId/comments'));
+  Future<Map<String, dynamic>> getComments(String postId,
+      {int page = 1, int limit = 10}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token') ?? '';
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/posts/comments'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({
+        'postId': postId,
+        'page': page,
+        'limit': limit,
+      }),
+    );
     return _handleResponse(response);
   }
 
   Future<Map<String, dynamic>> createComment(
       String postId, String content) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token') ?? '';
+
     final response = await http.post(
       Uri.parse('$baseUrl/comments'),
       body: json.encode({'post_id': postId, 'content': content}),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
     );
     return _handleResponse(response);
   }

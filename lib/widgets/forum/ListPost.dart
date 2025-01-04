@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grovehubmusic/pages/foro/cooments.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class PostListItem extends StatelessWidget {
@@ -73,7 +74,13 @@ class PostListItem extends StatelessWidget {
             SizedBox(width: 16),
             IconButton(
               icon: Icon(Icons.comment, color: Colors.white),
-              onPressed: onComment,
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CommentsScreen(post: post),
+                  ),
+                );
+              },
             ),
             Text(
               '${post['comments_count']}',

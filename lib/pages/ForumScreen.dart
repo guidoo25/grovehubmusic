@@ -97,7 +97,7 @@ class _ForumScreenState extends State<ForumScreen> {
                 _loadPosts(refresh: true);
               },
               onComment: () {
-                // Navigate to comments screen
+                // This is now handled in the PostListItem widget
               },
             );
           },
