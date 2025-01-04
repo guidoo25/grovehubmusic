@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:grovehubmusic/bloc/auth_bloc_bloc.dart';
+import 'package:grovehubmusic/config/enviroments.dart';
 import 'package:grovehubmusic/cubit/SongUploadCubit.dart';
 import 'package:grovehubmusic/cubit/cloudinary.dart';
 import 'package:grovehubmusic/router/router.dart';
 import 'package:grovehubmusic/services/services_auth.dart';
 
-void main() {
+void main() async {
+  await Enviroments().initEnviroments();
+
   runApp(const MusicApp());
 }
 
@@ -16,7 +19,7 @@ class MusicApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AuthService authService = AuthService();
+    final ApiService authService = ApiService();
 
     return MultiBlocProvider(
       providers: [

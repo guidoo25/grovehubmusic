@@ -30,6 +30,13 @@ class BarraLateral extends StatelessWidget {
           ),
           _construirElementoNav(
             context,
+            Icons.forum_outlined,
+            'Foro',
+            '/foro',
+            rutaActual == '/foro',
+          ),
+          _construirElementoNav(
+            context,
             Icons.whatshot,
             'Hot Picks',
             '/hot-picks',

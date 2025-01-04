@@ -1,8 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:grovehubmusic/config/enviroments.dart';
 import 'package:http/http.dart' as http;
 import 'dart:typed_data';
-
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum UploadType { song, album }
@@ -14,6 +15,7 @@ class SongUploadState extends Equatable {
   final bool isUploading;
   final String? errorMessage;
   final bool uploadSuccess;
+  final String? songId;
 
   const SongUploadState({
     this.uploadType = UploadType.song,
@@ -22,6 +24,7 @@ class SongUploadState extends Equatable {
     this.isUploading = false,
     this.errorMessage,
     this.uploadSuccess = false,
+    this.songId,
   });
 
   @override
@@ -31,7 +34,8 @@ class SongUploadState extends Equatable {
         fileBytes,
         isUploading,
         errorMessage,
-        uploadSuccess
+        uploadSuccess,
+        songId,
       ];
 
   SongUploadState copyWith({
@@ -41,6 +45,7 @@ class SongUploadState extends Equatable {
     bool? isUploading,
     String? errorMessage,
     bool? uploadSuccess,
+    String? songId,
   }) {
     return SongUploadState(
       uploadType: uploadType ?? this.uploadType,
@@ -49,6 +54,7 @@ class SongUploadState extends Equatable {
       isUploading: isUploading ?? this.isUploading,
       errorMessage: errorMessage,
       uploadSuccess: uploadSuccess ?? this.uploadSuccess,
+      songId: songId ?? this.songId,
     );
   }
 }
@@ -83,7 +89,7 @@ class SongUploadCubit extends Cubit<SongUploadState> {
       final token = prefs.getString('auth_token') ?? '';
 
       var request = http.MultipartRequest(
-          'POST', Uri.parse('http://localhost/api_music/api/songs/upload'));
+          'POST', Uri.parse('${Enviroments.apiUrl}/songs/upload'));
 
       request.files.add(http.MultipartFile.fromBytes(
         'song_file',
@@ -91,10 +97,15 @@ class SongUploadCubit extends Cubit<SongUploadState> {
         filename: state.fileName!,
       ));
 
-      request.headers['Authorization'] = '$token';
+      request.headers['Authorization'] = ' $token';
 
       var response = await request.send();
       var responseBody = await response.stream.bytesToString();
+      final jsonResponse = json.decode(responseBody);
+
+      if (jsonResponse['song_id'] != null) {
+        emit(state.copyWith(songId: jsonResponse['song_id']));
+      }
 
       if (response.statusCode == 201) {
         emit(state.copyWith(isUploading: false, uploadSuccess: true));

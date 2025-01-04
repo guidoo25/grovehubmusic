@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:grovehubmusic/pages/ForumScreen.dart';
 import 'package:grovehubmusic/pages/adminpanel/PanelPrincipal.dart';
 import 'package:grovehubmusic/pages/homepage.dart';
 import 'package:grovehubmusic/pages/login.dart';
 import 'package:grovehubmusic/router/loader.dart';
 import 'package:grovehubmusic/widgets/admin/form_create.dart';
+import 'package:grovehubmusic/widgets/form/songinfo.dart';
 import 'package:grovehubmusic/widgets/form/songupload.dart';
 import 'package:grovehubmusic/widgets/hits/hothits.dart';
 import 'package:grovehubmusic/widgets/oportunidad/list_card.dart';
@@ -39,6 +41,11 @@ GoRouter appRouter() {
                     child: SongUploadForm(),
                   )),
           GoRoute(
+              path: '/updateSong',
+              builder: (context, state) => LoadingScreen(
+                  future: Future.delayed(Duration(seconds: 1)),
+                  child: SongInfoForm())),
+          GoRoute(
             path: '/',
             builder: (context, state) => LoadingScreen(
               future: Future.delayed(Duration(seconds: 1)),
@@ -57,6 +64,13 @@ GoRouter appRouter() {
             builder: (context, state) => LoadingScreen(
               future: Future.delayed(Duration(seconds: 1)),
               child: const PantallaOportunidades(),
+            ),
+          ),
+          GoRoute(
+            path: '/foro',
+            builder: (context, state) => LoadingScreen(
+              future: Future.delayed(Duration(seconds: 1)),
+              child: ForumScreen(),
             ),
           ),
         ],

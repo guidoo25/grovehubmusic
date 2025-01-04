@@ -8,7 +8,7 @@ part 'auth_bloc_event.dart';
 part 'auth_bloc_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthService _authService;
+  final ApiService _authService;
 
   AuthBloc(this._authService) : super(AuthInitial()) {
     on<LoginRequested>(_onLoginRequested);

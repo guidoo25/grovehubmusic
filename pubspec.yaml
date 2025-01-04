@@ -43,6 +43,9 @@ dependencies:
   cloudinary_public: ^0.21.0
   equatable: ^2.0.3
   file_picker:
+  flutter_dotenv: ^5.1.0
+  timeago:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -70,6 +73,7 @@ flutter:
     - assets/
     - assets/load.json
     - assets/disco.json
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

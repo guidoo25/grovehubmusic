@@ -1,8 +1,10 @@
 import 'dart:convert';
-
+import 'dart:html' as html;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:grovehubmusic/config/enviroments.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ImagePrompt extends Equatable {
   final String transformedImageUrl;
@@ -32,24 +34,24 @@ class ImagePrompt extends Equatable {
 }
 
 class ImagePromptState extends Equatable {
-  final List<ImagePrompt> images;
-  final int currentIndex;
+  final String? imageUrl;
+  final bool isLoading;
 
   const ImagePromptState({
-    this.images = const [],
-    this.currentIndex = 0,
+    this.imageUrl,
+    this.isLoading = false,
   });
 
   @override
-  List<Object?> get props => [images, currentIndex];
+  List<Object?> get props => [imageUrl, isLoading];
 
   ImagePromptState copyWith({
-    List<ImagePrompt>? images,
-    int? currentIndex,
+    String? imageUrl,
+    bool? isLoading,
   }) {
     return ImagePromptState(
-      images: images ?? this.images,
-      currentIndex: currentIndex ?? this.currentIndex,
+      imageUrl: imageUrl,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 }
@@ -57,22 +59,8 @@ class ImagePromptState extends Equatable {
 class ImagePromptCubit extends Cubit<ImagePromptState> {
   ImagePromptCubit() : super(const ImagePromptState());
 
-  Future<void> generateInitialImages() async {
-    if (state.images.isNotEmpty) return;
-
-    final initialUrls = [
-      'https://res.cloudinary.com/generative-ai-demos/image/upload/f_auto/q_auto/v1/ugc/replace/hjlgezzxlmjhajywdxr3',
-    ];
-
-    final images = initialUrls
-        .map((url) => ImagePrompt(transformedImageUrl: url))
-        .toList();
-
-    emit(state.copyWith(images: images));
-  }
-
   Future<String> callUrltransformed() async {
-    final apiurl = "http://localhost/api_music/api/url";
+    final apiurl = "${Enviroments.apiUrl}/url";
     final response = await http.get(Uri.parse(apiurl));
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
@@ -87,45 +75,81 @@ class ImagePromptCubit extends Cubit<ImagePromptState> {
   }
 
   Future<void> setPromptForImage(String prompt) async {
-    final imgId = await callUrltransformed();
-    final currentIndex = state.currentIndex;
-    if (currentIndex >= state.images.length) return;
-
-    final updatedImages = List<ImagePrompt>.from(state.images);
-    updatedImages[currentIndex] =
-        updatedImages[currentIndex].copyWith(isLoading: true);
-    emit(state.copyWith(images: updatedImages));
-
-    final baseUrl =
-        'https://res.cloudinary.com/generative-ai-demos/image/upload/';
-    final transformedUrl =
-        '${baseUrl}e_gen_replace:from_album%20cover;to_${Uri.encodeComponent(prompt)};preserve-geometry_false/f_auto/q_auto/v1/ugc/replace/$imgId';
+    emit(state.copyWith(isLoading: true));
 
     try {
+      final imgId = await callUrltransformed();
+      final baseUrl =
+          'https://res.cloudinary.com/generative-ai-demos/image/upload/';
+      final transformedUrl =
+          '${baseUrl}e_gen_replace:from_album%20cover;to_${Uri.encodeComponent(prompt)};preserve-geometry_false/f_auto/q_auto/v1/ugc/replace/$imgId';
+
       final response = await http.get(Uri.parse(transformedUrl));
 
       if (response.statusCode == 200) {
-        updatedImages[currentIndex] = ImagePrompt(
-          transformedImageUrl: transformedUrl,
+        // Add timestamp to force image refresh
+        emit(state.copyWith(
+          imageUrl:
+              '$transformedUrl?t=${DateTime.now().millisecondsSinceEpoch}',
           isLoading: false,
-          isLocked: true,
-        );
+        ));
       } else {
-        updatedImages[currentIndex] =
-            updatedImages[currentIndex].copyWith(isLoading: false);
+        emit(state.copyWith(isLoading: false));
         print('Error: Received status code ${response.statusCode}');
       }
     } catch (e) {
-      updatedImages[currentIndex] =
-          updatedImages[currentIndex].copyWith(isLoading: false);
+      emit(state.copyWith(isLoading: false));
       print('Network error: $e');
     }
-
-    emit(state.copyWith(images: updatedImages));
   }
 
-  void setCurrentIndex(int index) {
-    emit(state.copyWith(currentIndex: index));
+  Future<void> uploadImageToServer({
+    required String songId,
+    required String title,
+    required String description,
+    required String genre,
+  }) async {
+    if (state.imageUrl == null) {
+      print('No image to upload');
+      return;
+    }
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('auth_token') ?? '';
+
+      // Download the image as a Blob
+      final response = await http.get(Uri.parse(state.imageUrl!));
+      if (response.statusCode != 200) {
+        throw Exception('Failed to download image');
+      }
+
+      final blob = html.Blob([response.bodyBytes]);
+
+      // Create a FormData object
+      final formData = html.FormData();
+      formData.append('song_id', songId);
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('genre', genre);
+      formData.appendBlob('cover_art', blob, 'cover_art.jpg');
+
+      // Create an XMLHttpRequest to upload the image
+      final request = html.HttpRequest();
+      request
+        ..open('POST', '${Enviroments.apiUrl}/songs/update')
+        ..setRequestHeader('Authorization', 'Bearer $token')
+        ..onLoadEnd.listen((event) {
+          if (request.status == 200) {
+            print('Image uploaded successfully');
+          } else {
+            print('Failed to upload image: ${request.responseText}');
+          }
+        })
+        ..send(formData);
+    } catch (e) {
+      print('Error during image upload: $e');
+    }
   }
 
   void resetState() {

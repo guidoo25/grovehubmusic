@@ -38,7 +38,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
                 context.go('/admin');
                 break;
               case 'artist':
-                context.go('/artist');
+                context.go('/');
                 break;
               case 'listener':
                 context.go('/');
@@ -142,7 +142,8 @@ class _PantallaLoginState extends State<PantallaLogin> {
                                       }
                                     },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Theme.of(context).primaryColor,
+                                backgroundColor:
+                                    Color.fromARGB(255, 202, 36, 125),
                                 minimumSize: const Size(double.infinity, 50),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
@@ -154,8 +155,9 @@ class _PantallaLoginState extends State<PantallaLogin> {
                                   : const Text(
                                       'INICIAR SESIÓN',
                                       style: TextStyle(
+                                        color: Colors.white,
                                         fontSize: 16,
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.normal,
                                       ),
                                     ),
                             );
@@ -189,11 +191,11 @@ class _PantallaLoginState extends State<PantallaLogin> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _socialButton('assets/google.png', () {}),
+                            _socialButton('google.jpg', () {}),
                             const SizedBox(width: 16),
-                            _socialButton('assets/facebook.png', () {}),
+                            _socialButton('facebook.png', () {}),
                             const SizedBox(width: 16),
-                            _socialButton('assets/apple.png', () {}),
+                            _socialButton('apple.jpg', () {}),
                           ],
                         ),
                         const SizedBox(height: 24),

@@ -11,7 +11,10 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       leading: const Icon(Icons.music_note),
-      title: const Text('RKHM'),
+      title: Image.asset(
+        'assets/logo.png',
+        width: 200,
+      ),
       actions: [
         IconButton(
           icon: const Icon(Icons.search),

@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:go_router/go_router.dart';
 import 'package:grovehubmusic/cubit/SongUploadCubit.dart';
+import 'package:grovehubmusic/widgets/music/form_song.dart';
 
 class SongUploadForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SongUploadCubit, SongUploadState>(
+    return BlocConsumer<SongUploadCubit, SongUploadState>(
+      listener: (context, state) async {
+        if (state.songId != null) {
+          await Future.delayed(Duration(seconds: 4));
+          GoRouter.of(context).go('/updateSong');
+        }
+      },
       builder: (context, state) {
         return Container(
           color: const Color(0xFF1D1D1D),
@@ -237,6 +245,37 @@ class SongUploadForm extends StatelessWidget {
                   ),
                 ],
               ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showSongInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: const Color(0xFF2D2D2D),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Información de la Canción',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  SongInfoForm(),
+                ],
+              ),
             ),
           ),
         );

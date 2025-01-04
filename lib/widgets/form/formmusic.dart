@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grovehubmusic/services/services_auth.dart';
 
 class FormularioDinamico extends StatefulWidget {
   final List<Map<String, dynamic>> campos;
@@ -26,7 +27,7 @@ class _FormularioDinamicoState extends State<FormularioDinamico> {
             onPressed: _enviarFormulario,
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).primaryColor,
-              foregroundColor: Colors.white,
+              foregroundColor: const Color.fromARGB(255, 172, 89, 89),
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             ),
             child: const Text('Subir Contenido'),
@@ -155,6 +156,12 @@ class _FormularioDinamicoState extends State<FormularioDinamico> {
   void _enviarFormulario() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      ApiService().updateSongInfo(
+          description: _formData['description'],
+          genre: _formData['genre'],
+          songId: _formData['songId'],
+          title: _formData['title'],
+          coverArtPath: _formData['coverArtPath']);
       // Aquí puedes manejar el envío del formulario
       print(_formData);
       ScaffoldMessenger.of(context).showSnackBar(
