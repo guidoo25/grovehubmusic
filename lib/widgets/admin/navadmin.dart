@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:grovehubmusic/cubit/Usertlistt.dart';
 
 class BarraLateralAdmin extends StatelessWidget {
   const BarraLateralAdmin({super.key});
@@ -54,27 +57,50 @@ class BarraLateralAdmin extends StatelessWidget {
                   icon: Icons.admin_panel_settings,
                   title: 'Roles & Acceso',
                   isSelected: true,
+                  onTap: () {
+                    GoRouter.of(context).go('/admin');
+                  },
                 ),
                 _buildExpandableSection(
+                  context,
                   title: 'Lista de Usuarios',
                   icon: Icons.people,
                   items: [
-                    'Todos los usuarios',
-                    'Usuarios suscritos',
-                    'Administradores',
-                    'Moderadores',
-                    'Gestores de artistas',
+                    {
+                      'title': 'Todos los usuarios',
+                      'filter': {'role': 'all'}
+                    },
+                    {
+                      'title': 'Usuarios suscritos',
+                      'filter': {'role': 'listener'}
+                    },
+                    {
+                      'title': 'Administradores',
+                      'filter': {'role': 'admin'}
+                    },
+                    {
+                      'title': 'Moderadores',
+                      'filter': {'role': 'moderator'}
+                    },
+                    {
+                      'title': 'Gestores de artistas',
+                      'filter': {'role': 'artist'}
+                    },
+                  ],
+                ),
+                _buildExpandableSectionContent(
+                  context,
+                  title: 'Contenido de Usuario',
+                  icon: Icons.content_copy,
+                  items: [
+                    {'title': 'Foro admin', 'filter': 'admin/foro'},
                   ],
                 ),
                 _buildExpandableSection(
-                  title: 'Contenido de Usuario',
-                  icon: Icons.content_copy,
-                  items: ['Publicaciones', 'Comentarios', 'Multimedia'],
-                ),
-                _buildExpandableSection(
+                  context,
                   title: 'Solicitudes',
                   icon: Icons.request_page,
-                  items: ['Pendientes', 'Aprobadas', 'Rechazadas'],
+                  items: [],
                 ),
                 const Divider(color: Colors.grey),
                 // Estadísticas
@@ -103,6 +129,7 @@ class BarraLateralAdmin extends StatelessWidget {
     required IconData icon,
     required String title,
     bool isSelected = false,
+    VoidCallback? onTap,
   }) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -119,15 +146,16 @@ class BarraLateralAdmin extends StatelessWidget {
           ),
         ),
         selected: isSelected,
-        onTap: () {},
+        onTap: onTap,
       ),
     );
   }
 
-  Widget _buildExpandableSection({
+  Widget _buildExpandableSection(
+    BuildContext context, {
     required String title,
     required IconData icon,
-    required List<String> items,
+    required List<Map<String, dynamic>> items,
   }) {
     return ExpansionTile(
       leading: Icon(icon, color: Colors.grey),
@@ -138,8 +166,11 @@ class BarraLateralAdmin extends StatelessWidget {
       children: items
           .map((item) => _buildMenuItem(
                 icon: Icons.circle,
-                title: item,
+                title: item['title'],
                 isSelected: false,
+                onTap: () {
+                  context.read<UserCubit>().loadUsers(filters: item['filter']);
+                },
               ))
           .toList(),
     );
@@ -164,6 +195,31 @@ class BarraLateralAdmin extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildExpandableSectionContent(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required List<Map<String, dynamic>> items,
+  }) {
+    return ExpansionTile(
+      leading: Icon(icon, color: Colors.grey),
+      title: Text(
+        title,
+        style: const TextStyle(color: Colors.grey),
+      ),
+      children: items
+          .map((item) => _buildMenuItem(
+                icon: Icons.circle,
+                title: item['title'],
+                isSelected: false,
+                onTap: () {
+                  GoRouter.of(context).go('/${item['filter']}');
+                },
+              ))
+          .toList(),
     );
   }
 }

@@ -45,6 +45,11 @@ dependencies:
   file_picker:
   flutter_dotenv: ^5.1.0
   timeago:
+  just_audio:
+  google_sign_in:
+  dropdown_button2:
+  flutter_staggered_animations:
+  
 
 dev_dependencies:
   flutter_test:

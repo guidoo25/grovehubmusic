@@ -5,6 +5,8 @@ import 'package:grovehubmusic/services/services_auth.dart';
 import 'package:lottie/lottie.dart';
 
 class SongInfoForm extends StatefulWidget {
+  late String songId;
+  SongInfoForm({super.key, required this.songId});
   @override
   _SongInfoFormState createState() => _SongInfoFormState();
 }
@@ -25,7 +27,7 @@ class _SongInfoFormState extends State<SongInfoForm> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Song Information',
+                'Informacion de la cancion',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -43,7 +45,7 @@ class _SongInfoFormState extends State<SongInfoForm> {
                       children: [
                         _buildTextField(
                           controller: _titleController,
-                          label: 'Title',
+                          label: 'Titulo',
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter a title';
@@ -52,12 +54,57 @@ class _SongInfoFormState extends State<SongInfoForm> {
                           },
                         ),
                         SizedBox(height: 16),
-                        _buildTextField(
-                          controller: _genreController,
-                          label: 'Genre',
+                        SizedBox(height: 16),
+                        DropdownButtonFormField<String>(
+                          value: _genreController.text.isEmpty
+                              ? null
+                              : _genreController.text,
+                          items: [
+                            'Pop',
+                            'Rock',
+                            'Reggae',
+                            'Indie',
+                            'Jazz',
+                            'Hip Hop',
+                            'Clasica',
+                            'Trap',
+                            'Rap',
+                          ]
+                              .map((genre) => DropdownMenuItem<String>(
+                                    value: genre,
+                                    child: Text(genre),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _genreController.text = value!;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'genero',
+                            labelStyle: TextStyle(color: Colors.white70),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white30),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey[800],
+                          ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter a genre';
+                              return 'Please select a genre';
                             }
                             return null;
                           },
@@ -65,7 +112,7 @@ class _SongInfoFormState extends State<SongInfoForm> {
                         SizedBox(height: 16),
                         _buildTextField(
                           controller: _descriptionController,
-                          label: 'Description',
+                          label: 'Descripcion de image prompt',
                           maxLines: 5,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -88,7 +135,7 @@ class _SongInfoFormState extends State<SongInfoForm> {
                             padding: EdgeInsets.symmetric(vertical: 16),
                           ),
                           child: Text(
-                            'Generate Cover Image',
+                            'Generate  Imagen con ia ',
                             style: TextStyle(fontSize: 16),
                           ),
                         ),
@@ -102,7 +149,7 @@ class _SongInfoFormState extends State<SongInfoForm> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          'Cover Image',
+                          'Cover Art',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -185,24 +232,25 @@ class _SongInfoFormState extends State<SongInfoForm> {
               ),
               SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Song information updated')),
-                    );
-                    ApiService().updateSongInfo(
-                        songId: 'songId',
-                        description: _descriptionController.text,
-                        genre: _genreController.text,
-                        title: _titleController.text,
-                        coverArtPath: state.imageUrl);
+                    // In your widget
+                    final imageCubit = context.read<ImagePromptCubit>();
+                    if (imageCubit.state.imageUrl != null) {
+                      await ApiService().updateSongInfo(
+                          songId: widget.songId,
+                          title: _titleController.text,
+                          description: _descriptionController.text,
+                          genre: _genreController.text,
+                          aiGeneratedImageUrl: imageCubit.state.imageUrl!);
+                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: Text(
-                  'Save Information',
+                  'guardar cancion',
                   style: TextStyle(fontSize: 16),
                 ),
               ),

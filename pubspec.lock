@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  audio_session:
+    dependency: transitive
+    description:
+      name: audio_session
+      sha256: "343e83bc7809fbda2591a49e525d6b63213ade10c76f15813be9aed6657b3261"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.21"
   bloc:
     dependency: transitive
     description:
@@ -129,6 +137,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  dropdown_button2:
+    dependency: "direct main"
+    description:
+      name: dropdown_button2
+      sha256: b0fe8d49a030315e9eef6c7ac84ca964250155a6224d491c1365061bc974a9e1
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.9"
   equatable:
     dependency: "direct main"
     description:
@@ -222,6 +238,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.19"
+  flutter_staggered_animations:
+    dependency: "direct main"
+    description:
+      name: flutter_staggered_animations
+      sha256: "81d3c816c9bb0dca9e8a5d5454610e21ffb068aedb2bde49d2f8d04f75538351"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -240,6 +264,54 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.2.0"
+  google_identity_services_web:
+    dependency: transitive
+    description:
+      name: google_identity_services_web
+      sha256: "5be191523702ba8d7a01ca97c17fca096822ccf246b0a9f11923a6ded06199b6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1+4"
+  google_sign_in:
+    dependency: "direct main"
+    description:
+      name: google_sign_in
+      sha256: fad6ddc80c427b0bba705f2116204ce1173e09cf299f85e053d57a55e5b2dd56
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.2.2"
+  google_sign_in_android:
+    dependency: transitive
+    description:
+      name: google_sign_in_android
+      sha256: "7647893c65e6720973f0e579051c8f84b877b486614d9f70a404259c41a4632e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.23"
+  google_sign_in_ios:
+    dependency: transitive
+    description:
+      name: google_sign_in_ios
+      sha256: "83f015169102df1ab2905cf8abd8934e28f87db9ace7a5fa676998842fed228a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.7.8"
+  google_sign_in_platform_interface:
+    dependency: transitive
+    description:
+      name: google_sign_in_platform_interface
+      sha256: "1f6e5787d7a120cc0359ddf315c92309069171306242e181c09472d1b00a2971"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.5"
+  google_sign_in_web:
+    dependency: transitive
+    description:
+      name: google_sign_in_web
+      sha256: ada595df6c30cead48e66b1f3a050edf0c5cf2ba60c185d69690e08adcc6281b
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.12.4+3"
   http:
     dependency: transitive
     description:
@@ -264,6 +336,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.19.0"
+  just_audio:
+    dependency: "direct main"
+    description:
+      name: just_audio
+      sha256: a49e7120b95600bd357f37a2bb04cd1e88252f7cdea8f3368803779b925b1049
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.42"
+  just_audio_platform_interface:
+    dependency: transitive
+    description:
+      name: just_audio_platform_interface
+      sha256: "0243828cce503c8366cc2090cefb2b3c871aa8ed2f520670d76fd47aa1ab2790"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.3.0"
+  just_audio_web:
+    dependency: transitive
+    description:
+      name: just_audio_web
+      sha256: "9a98035b8b24b40749507687520ec5ab404e291d2b0937823ff45d92cb18d448"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.13"
   leak_tracker:
     dependency: transitive
     description:

@@ -4,6 +4,9 @@ import 'package:grovehubmusic/widgets/forum/ListPost.dart';
 import 'package:grovehubmusic/widgets/forum/postdialog.dart';
 
 class ForumScreen extends StatefulWidget {
+  final String topicId;
+  const ForumScreen({super.key, required this.topicId});
+
   @override
   _ForumScreenState createState() => _ForumScreenState();
 }
@@ -34,12 +37,13 @@ class _ForumScreenState extends State<ForumScreen> {
     setState(() {
       _isLoading = true;
     });
-
     try {
-      final response = await _forumService.getPosts(page: _currentPage);
+      final response = await _forumService.getPosts(
+          page: _currentPage, topicId: widget.topicId);
       setState(() {
         _posts.addAll(response['data']['posts']);
         _totalPages = response['data']['total_pages'];
+
         _currentPage++;
         _isLoading = false;
       });
@@ -69,7 +73,7 @@ class _ForumScreenState extends State<ForumScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text('Forum', style: TextStyle(color: Colors.white)),
+        title: Text('Foro', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.grey[900],
       ),
       body: RefreshIndicator(

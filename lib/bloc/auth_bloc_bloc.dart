@@ -22,6 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final response = await _authService.login(event.email, event.password);
       if (response.success) {
         await _saveToken(response.data.token);
+        await _saveRol(response.data.user.role);
         emit(AuthSuccess(response.data.user));
       } else {
         emit(AuthFailure('Login failed'));
@@ -40,6 +41,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('auth_token', token);
+  }
+
+  Future<void> _saveRol(String rol) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('rol', rol);
   }
 
   Future<void> _removeToken() async {

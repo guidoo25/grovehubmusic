@@ -6,8 +6,41 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ForumService {
   final String baseUrl = '${Enviroments.apiUrl}';
 
-  Future<Map<String, dynamic>> getPosts({int page = 1}) async {
-    final response = await http.get(Uri.parse('$baseUrl/posts?page=$page'));
+  Future<Map<String, dynamic>> getPosts(
+      {int page = 1, int limit = 10, String? topicId}) async {
+    final queryParams = {
+      'page': page.toString(),
+      'limit': limit.toString(),
+      if (topicId != null) 'topic_id': topicId.toString(),
+    };
+
+    final uri =
+        Uri.parse('$baseUrl/posts').replace(queryParameters: queryParams);
+
+    final response = await http.get(uri);
+    return _handleResponse2(response);
+  }
+
+  Map<String, dynamic> _handleResponse2(http.Response response) {
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load posts');
+    }
+  }
+
+  Future<Map<String, dynamic>> inactivePost(String postId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token') ?? '';
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/posts/inactive'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({'post_id': postId}),
+    );
     return _handleResponse(response);
   }
 
@@ -69,6 +102,11 @@ class ForumService {
   Future<Map<String, dynamic>> deleteComment(String commentId) async {
     final response =
         await http.delete(Uri.parse('$baseUrl/comments/$commentId'));
+    return _handleResponse(response);
+  }
+
+  Future<Map<String, dynamic>> fetchCategories() async {
+    final response = await http.get(Uri.parse('$baseUrl/foro/topics'));
     return _handleResponse(response);
   }
 

@@ -21,13 +21,13 @@ class BarraLateral extends StatelessWidget {
             '/',
             rutaActual == '/',
           ),
-          _construirElementoNav(
-            context,
-            Icons.search,
-            'Buscar',
-            '/explorar',
-            rutaActual == '/explorar',
-          ),
+          // _construirElementoNav(
+          //   context,
+          //   Icons.search,
+          //   'Buscar',
+          //   '/explorar',
+          //   rutaActual == '/explorar',
+          // ),
           _construirElementoNav(
             context,
             Icons.forum_outlined,

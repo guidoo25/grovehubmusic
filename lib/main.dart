@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:grovehubmusic/bloc/auth_bloc_bloc.dart';
 import 'package:grovehubmusic/config/enviroments.dart';
 import 'package:grovehubmusic/cubit/SongUploadCubit.dart';
+import 'package:grovehubmusic/cubit/Usertlistt.dart';
+import 'package:grovehubmusic/cubit/audio/AudioPlayerCubit.dart';
 import 'package:grovehubmusic/cubit/cloudinary.dart';
 import 'package:grovehubmusic/router/router.dart';
 import 'package:grovehubmusic/services/services_auth.dart';
@@ -31,7 +33,11 @@ class MusicApp extends StatelessWidget {
         ),
         BlocProvider<ImagePromptCubit>(
           create: (context) => ImagePromptCubit(),
-        ), // Puedes agregar más BlocProviders aquí si es necesario
+        ),
+        BlocProvider<UserCubit>(
+          create: (context) => UserCubit(authService),
+        ),
+        BlocProvider(create: (context) => AudioPlayerCubit()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

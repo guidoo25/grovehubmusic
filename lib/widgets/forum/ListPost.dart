@@ -1,5 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:grovehubmusic/pages/foro/cooments.dart';
+import 'package:grovehubmusic/services/forum-services.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class PostListItem extends StatelessWidget {
@@ -51,6 +55,17 @@ class PostListItem extends StatelessWidget {
                   post['username'],
                   style: TextStyle(color: Colors.grey[400]),
                 ),
+                GestureDetector(
+                  onTap: () {
+                    GoRouter.of(context).go('/admin/user/${post['user_id']}');
+                  },
+                  child: Text(
+                    post['username'],
+                    style: TextStyle(
+                        color: Colors.grey[400],
+                        decoration: TextDecoration.underline),
+                  ),
+                ),
                 Spacer(),
                 Text(
                   timeago.format(DateTime.parse(post['created_at'])),
@@ -63,6 +78,29 @@ class PostListItem extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            DropdownButtonHideUnderline(
+                child: DropdownButton(
+              items: [
+                DropdownMenuItem(
+                  value: 'borrar',
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text('borrar post',
+                          style: TextStyle(color: Colors.white)),
+                    ],
+                  ),
+                ),
+              ],
+              onChanged: (value) {
+                if (value == 'edit') {
+                  // Handle edit action
+                } else if (value == 'delete') {
+                  ForumService().inactivePost(post['id']);
+                }
+              },
+            )),
             IconButton(
               icon: Icon(Icons.thumb_up, color: Colors.white),
               onPressed: onLike,

@@ -44,7 +44,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
                 context.go('/');
                 break;
               default:
-                context.go('/listener');
+                context.go('/');
                 break;
             }
           } else if (state is AuthFailure) {
@@ -191,11 +191,11 @@ class _PantallaLoginState extends State<PantallaLogin> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _socialButton('google.jpg', () {}),
-                            const SizedBox(width: 16),
-                            _socialButton('facebook.png', () {}),
-                            const SizedBox(width: 16),
-                            _socialButton('apple.jpg', () {}),
+                            // _socialButton('google.jpg', () {}),
+                            // const SizedBox(width: 16),
+                            // _socialButton('facebook.png', () {}),
+                            // const SizedBox(width: 16),
+                            // _socialButton('apple.jpg', () {}),
                           ],
                         ),
                         const SizedBox(height: 24),
@@ -208,7 +208,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
                             ),
                             TextButton(
                               onPressed: () {
-                                context.go('/register');
+                                context.go('/registro');
                               },
                               child: Text(
                                 'Regístrate',

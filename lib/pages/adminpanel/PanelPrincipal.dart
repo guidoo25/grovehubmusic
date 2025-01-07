@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:grovehubmusic/widgets/admin/headeradmin.dart';
-import 'package:grovehubmusic/widgets/admin/listadmin.dart';
+import 'package:grovehubmusic/widgets/admin/tabla_usuarios.dart';
 import 'package:grovehubmusic/widgets/admin/navadmin.dart';
 
 class PanelPrincipal extends StatelessWidget {
-  const PanelPrincipal({super.key});
+  final Widget child;
+  const PanelPrincipal({
+    super.key,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +24,7 @@ class PanelPrincipal extends StatelessWidget {
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(24),
-                    child: const TablaUsuarios(),
+                    child: child,
                   ),
                 ),
               ],

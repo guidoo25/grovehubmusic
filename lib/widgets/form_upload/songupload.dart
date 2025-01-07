@@ -12,7 +12,7 @@ class SongUploadForm extends StatelessWidget {
       listener: (context, state) async {
         if (state.songId != null) {
           await Future.delayed(Duration(seconds: 4));
-          GoRouter.of(context).go('/updateSong');
+          GoRouter.of(context).go('/upload/choice', extra: state.songId);
         }
       },
       builder: (context, state) {
@@ -252,7 +252,7 @@ class SongUploadForm extends StatelessWidget {
     );
   }
 
-  void _showSongInfoDialog(BuildContext context) {
+  void _showSongInfoDialog(BuildContext context, String songId) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -273,7 +273,7 @@ class SongUploadForm extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 16),
-                  SongInfoForm(),
+                  //SongInfoForm( songId: songId),
                 ],
               ),
             ),

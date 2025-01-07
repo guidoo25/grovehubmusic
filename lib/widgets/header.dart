@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:grovehubmusic/bloc/auth_bloc_bloc.dart';
 
 class Header extends StatelessWidget implements PreferredSizeWidget {
   const Header({super.key});
@@ -12,42 +14,54 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: const Icon(Icons.music_note),
       title: Image.asset(
-        'assets/logo.png',
+        'groove.png',
         width: 200,
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.search),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.notifications_none),
-          onPressed: () {},
-        ),
-        ElevatedButton(
           onPressed: () {
             GoRouter.of(context).go('/upload');
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.deepPurple,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18.0),
-            ),
+          icon: Icon(
+            Icons.cloud_upload,
+            color: Colors.white,
           ),
-          child: const Text('Upload Song/Album'),
+          tooltip: 'Subir canción',
+          iconSize: 30.0,
+          padding: EdgeInsets.all(10.0),
+          splashRadius: 25.0,
+          color: Colors.white,
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 2),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          child: ElevatedButton(
-            onPressed: () {
-              GoRouter.of(context).go('/login');
+          child: BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              if (state is AuthSuccess) {
+                return ElevatedButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(LogoutRequested());
+                    GoRouter.of(context).go('/login');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    side: const BorderSide(color: Colors.white),
+                  ),
+                  child: const Text('Salir'),
+                );
+              } else {
+                return ElevatedButton(
+                  onPressed: () {
+                    GoRouter.of(context).go('/login');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    side: const BorderSide(color: Colors.white),
+                  ),
+                  child: const Text('Login'),
+                );
+              }
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              side: const BorderSide(color: Colors.white),
-            ),
-            child: const Text('Login'),
           ),
         ),
       ],
